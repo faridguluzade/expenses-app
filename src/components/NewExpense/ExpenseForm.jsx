@@ -5,6 +5,7 @@ const ExpenseForm = ({ onSaveExpenseData }) => {
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredAmount, setEnteredAmount] = useState("");
   const [enteredDate, setEnteredDate] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   const clearInput = () => {
     setEnteredTitle("");
@@ -29,15 +30,24 @@ const ExpenseForm = ({ onSaveExpenseData }) => {
 
     const expenseData = {
       title: enteredTitle,
-      amount: enteredAmount,
+      amount: +enteredAmount,
       date: new Date(enteredDate),
     };
 
     onSaveExpenseData(expenseData);
+    setIsEditing(false);
     clearInput();
   };
 
-  return (
+  const startEditingHandler = () => {
+    setIsEditing(true);
+  };
+
+  const stopEditingHandler = () => {
+    setIsEditing(false);
+  };
+
+  return isEditing ? (
     <form onSubmit={submitHandler}>
       <div className="new-expense__controls">
         <div className="new-expense__control">
@@ -70,9 +80,14 @@ const ExpenseForm = ({ onSaveExpenseData }) => {
         </div>
       </div>
       <div className="new-expense__actions">
+        <button type="button" onClick={stopEditingHandler}>
+          Cancel
+        </button>
         <button type="submit">Add Expense</button>
       </div>
     </form>
+  ) : (
+    <button onClick={startEditingHandler}>Add New Expense</button>
   );
 };
 
